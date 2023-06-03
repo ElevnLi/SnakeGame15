@@ -96,16 +96,35 @@ class Snake:
         self.body: List[Vector2] = [Vector2(5, 10), Vector2(6, 10), Vector2(7, 10)]
         self.direction = Vector2(1, 0)
         self.add_body = False
+        self.head_graphic = head_right_graphic
 
     def draw(self):
-        for block in self.body:
+        self.update_head_graphic()
+        for index, block in enumerate(self.body):
             block_rect = pygame.Rect(block.x * CELL_SIZE, block.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-            pygame.draw.rect(canva, COLOUR_SNAKE, block_rect)
-
+            if index == self.length - 1:
+                canva.blit(self.head_graphic, block_rect)
+            else:
+                pygame.draw.rect(canva, COLOUR_SNAKE, block_rect)
+            
     @property
     def head(self):
         return self.body[-1]
     
+    @property
+    def length(self):
+        return len(self.body)
+    
+    def update_head_graphic(self):
+        if self.direction == Vector2(1, 0):
+            self.head_graphic = head_right_graphic
+        elif self.direction == Vector2(-1, 0):
+            self.head_graphic = head_left_graphic
+        elif self.direction == Vector2(0, 1):
+            self.head_graphic = head_down_graphic
+        elif self.direction == Vector2(0, -1):
+            self.head_graphic = head_up_graphic
+
     def move(self):
         current_head = self.head
         new_head = current_head + self.direction
