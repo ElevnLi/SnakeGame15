@@ -80,6 +80,9 @@ crunch_sound_graphic = pygame.mixer.Sound(
 
 class Fruit:
     def __init__(self):
+        self.random_place()
+        
+    def random_place(self):
         self.x = randint(0, CELL_NUMBER - 1)
         self.y = randint(0, CELL_NUMBER - 1)
         self.pos = Vector2(self.x, self.y)
@@ -109,34 +112,47 @@ class Snake:
         new_body.append(new_head)
         self.body = new_body[:]
 
-fruit = Fruit()
-snake = Snake()
+class SnakeGame:
+    def __init__(self):
+        self.fruit = Fruit()
+        self.snake = Snake()
+
+    def draw(self):
+        self.fruit.draw()
+        self.snake.draw()
+
+    def update(self):
+        self.snake.move()
+
+    def game_over(self):
+        pygame.quit()
+        sys.exit()
+
+snake_game = SnakeGame()
 
 while True:
     # 输入
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+            snake_game.game_over()
         if event.type == SNAKE_UPDATE:
-            snake.move()
+            snake_game.update()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                if snake.direction != Vector2(0, 1):
-                    snake.direction = Vector2(0, -1)
+                if snake_game.snake.direction != Vector2(0, 1):
+                    snake_game.snake.direction = Vector2(0, -1)
             elif event.key == pygame.K_DOWN:
-                if snake.direction != Vector2(0, -1):
-                    snake.direction = Vector2(0, 1)
+                if snake_game.snake.direction != Vector2(0, -1):
+                    snake_game.snake.direction = Vector2(0, 1)
             elif event.key == pygame.K_LEFT:
-                if snake.direction != Vector2(1, 0):
-                    snake.direction = Vector2(-1, 0)
+                if snake_game.snake.direction != Vector2(1, 0):
+                    snake_game.snake.direction = Vector2(-1, 0)
             elif event.key == pygame.K_RIGHT:
-                if snake.direction != Vector2(-1, 0):
-                    snake.direction = Vector2(1, 0)
+                if snake_game.snake.direction != Vector2(-1, 0):
+                    snake_game.snake.direction = Vector2(1, 0)
 
     # 渲染
     canva.fill(COLOUR_BG)
-    fruit.draw()
-    snake.draw()
+    snake_game.draw()
     pygame.display.update()
     clock.tick(MAX_FPS)
