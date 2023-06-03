@@ -95,6 +95,7 @@ class Snake:
     def __init__(self):
         self.body: List[Vector2] = [Vector2(5, 10), Vector2(6, 10), Vector2(7, 10)]
         self.direction = Vector2(1, 0)
+        self.add_body = False
 
     def draw(self):
         for block in self.body:
@@ -108,9 +109,16 @@ class Snake:
     def move(self):
         current_head = self.head
         new_head = current_head + self.direction
-        new_body = self.body[1:]
-        new_body.append(new_head)
-        self.body = new_body[:]
+        if not self.add_body:
+            new_body = self.body[1:]
+            new_body.append(new_head)
+            self.body = new_body[:]
+        else:
+            self.body.append(new_head)
+            self.add_body = False
+
+    def grow(self):
+        self.add_body = True
 
 class SnakeGame:
     def __init__(self):
@@ -123,6 +131,24 @@ class SnakeGame:
 
     def update(self):
         self.snake.move()
+        self.check_eat()
+        self.check_fail()
+
+    def check_eat(self):
+        if self.fruit.pos == self.snake.head:
+            # 蛇变长了一节
+            self.snake.grow()
+            # 水果被重新摆放
+            self.fruit.random_place()
+
+    def check_fail(self):
+        # 蛇头有没有撞墙
+        if not 0 <= self.snake.head.x < CELL_NUMBER or not 0 <= self.snake.head.y < CELL_NUMBER:
+            self.game_over()
+        # 蛇头有没有撞到自己
+        for block in self.snake.body[:-1]:
+            if block == self.snake.head:
+                self.game_over()
 
     def game_over(self):
         pygame.quit()
