@@ -112,6 +112,10 @@ class Snake:
         return self.body[-1]
 
     @property
+    def tail(self):
+        return self.body[0]
+
+    @property
     def length(self):
         return len(self.body)
 
@@ -179,21 +183,23 @@ class Snake:
                         canva.blit(self.body_br_graphic, block_rect)
 
     def update_tail_graphic(self):
-        if self.body[1] - self.body[0] == Vector2(1, 0):
+        tail_direction = self.body[1] - self.tail
+        if tail_direction == Vector2(1, 0):
             self.tail_graphic = tail_left_graphic
-        elif self.body[1] - self.body[0] == Vector2(-1, 0):
+        elif tail_direction == Vector2(-1, 0):
             self.tail_graphic = tail_right_graphic
-        elif self.body[1] - self.body[0] == Vector2(0, 1):
+        elif tail_direction == Vector2(0, 1):
             self.tail_graphic = tail_up_graphic
         else:
             self.tail_graphic = tail_down_graphic
 
     def update_head_graphic(self):
-        if self.direction == Vector2(1, 0) or self.direction == Vector2(0, 0):
+        head_direction = self.head-self.body[-2]
+        if head_direction == Vector2(1, 0) or head_direction == Vector2(0, 0):
             self.head_graphic = head_right_graphic
-        elif self.direction == Vector2(-1, 0):
+        elif head_direction == Vector2(-1, 0):
             self.head_graphic = head_left_graphic
-        elif self.direction == Vector2(0, 1):
+        elif head_direction == Vector2(0, 1):
             self.head_graphic = head_down_graphic
         else:
             self.head_graphic = head_up_graphic
