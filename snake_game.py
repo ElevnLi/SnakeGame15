@@ -121,7 +121,8 @@ class Snake:
 
     def draw_score(self):
         score_surface = pygame.font.Font(
-            os.path.join(package_base_path, "Assets", "Font", "PoetsenOne-Regular.ttf"), 25
+            os.path.join(package_base_path, "Assets", "Font", "PoetsenOne-Regular.ttf"),
+            25,
         ).render(f"Count: {str(self.length - 3)}", True, (56, 74, 12))
         score_rect = score_surface.get_rect(
             center=(
@@ -194,8 +195,8 @@ class Snake:
             self.tail_graphic = tail_down_graphic
 
     def update_head_graphic(self):
-        head_direction = self.head-self.body[-2]
-        if head_direction == Vector2(1, 0) or head_direction == Vector2(0, 0):
+        head_direction = self.head - self.body[-2]
+        if head_direction == Vector2(1, 0):
             self.head_graphic = head_right_graphic
         elif head_direction == Vector2(-1, 0):
             self.head_graphic = head_left_graphic
@@ -209,7 +210,7 @@ class Snake:
             new_body = self.body[1:]
             if self.direction != Vector2(0, 0):
                 new_body.append(self.head + self.direction)
-                self.body = new_body[:]
+                self.body = new_body
         else:
             self.body.append(self.head + self.direction)
             self.add_body = False
@@ -319,7 +320,9 @@ def new_game():
                     if snake_game.snake.direction != Vector2(0, -1):
                         snake_game.snake.direction = Vector2(0, 1)
                 elif event.key == pygame.K_LEFT:
-                    if snake_game.snake.direction != Vector2(1, 0):
+                    if snake_game.snake.direction != Vector2(
+                        1, 0
+                    ) and snake_game.snake.direction != Vector2(0, 0):
                         snake_game.snake.direction = Vector2(-1, 0)
                 else:
                     if snake_game.snake.direction != Vector2(-1, 0):
